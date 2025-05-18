@@ -16,45 +16,6 @@
             </button>
         </div>
         @endif
-        <div class="bg-[#F2FBFF] rounded-lg border-2 w-full h-auto">
-            <h1 class="text-4xl font-bold justify-center flex m-10">Download Pembayaran Final</h1>
-            <hr class="border-2 ">
-            <div class="flex flex-col bg-white m-10">
-                <h1 class="text-2xl font-bold mx-10 mt-10 mb-6">Scientific Paper</h1>
-                <hr class="border-2 mb-3 ">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-5">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-[#40C6A1] dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    No.
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Nama Tim
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Download Pembayaran Final
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($ktis as $index => $kti)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">
-                                    {{ $index + 1 }}
-                                </td>
-                                <td class="px-6 py-4 capitalize">
-                                    {{ $kti['team_name']  }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <a href="{{ route('download', ['filename' => urlencode($kti['path_2'])]) }}" class="font-medium text-[#40C6A1] hover:underline">{{ $kti['path_2']}}</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
             <div class="flex flex-col bg-white m-10">
                 <h1 class="text-2xl font-bold mx-10 mt-10 mb-6">BusPlan</h1>
                 <hr class="border-2 mb-3 ">

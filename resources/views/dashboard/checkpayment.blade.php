@@ -15,8 +15,8 @@
                                 <button type="button" class="flex flex-col items-start justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3 relative" data-accordion-target="#accordion-color-body-1" aria-expanded="true" aria-controls="accordion-color-body-1">
                                     <span class="text-2xl">Check Payment Submission 2</span>
                                     <div class="flex flex-row gap-2 mt-2">
-                                        <div class="text-white font-extrabold bg-sky-400 py-0.5 px-3 rounded-2xl">12 August 2024 00:00 WIB</div>
-                                        <div class="text-white font-extrabold bg-red-400 py-0.5 px-3 rounded-2xl">28 August 2024 00:00 WIB</div>
+                                        <div class="text-white font-extrabold bg-sky-400 py-0.5 px-3 rounded-2xl">27 Juni August 2024 00:00 WIB</div>
+                                        <div class="text-white font-extrabold bg-red-400 py-0.5 px-3 rounded-2xl">27 Juli 2024 00:00 WIB</div>
                                     </div>
                                     <svg data-accordion-icon class="w-3 h-3 absolute top-5 right-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
@@ -26,10 +26,10 @@
                             <div id="accordion-color-body-1" class="hidden" aria-labelledby="accordion-color-heading-1">
                                 <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                                     <p class="mb-2 text-gray-500 dark:text-gray-400">Semua tim yang sudah bayar nama timnya akan tercatat di semua kategory : </p>
-                                    <p class="mb-2 text-gray-500 dark:text-gray-400">1. KTI </p>
-                                    <p class="mb-2 text-gray-500 dark:text-gray-400">2. Busplan</p>
-                                    <p class="mb-2 text-gray-500 dark:text-gray-400">3. PPL</p>
-                                    <p class="mb-5 text-gray-500 dark:text-gray-400">4. UX Designer</p>
+                                    {{-- <p class="mb-2 text-gray-500 dark:text-gray-400">1. KTI </p> --}}
+                                    <p class="mb-2 text-gray-500 dark:text-gray-400">1. Busplan</p>
+                                    <p class="mb-2 text-gray-500 dark:text-gray-400">2. PPL</p>
+                                    <p class="mb-5 text-gray-500 dark:text-gray-400">3. UX Designer</p>
                                     <!-- IF ELSE -->
                                     <div class="ml-5 bg-green-100 rounded rounded-4xl">
                                         <a href="{{route('checkpayment2.index')}}" class="block w-full p-3 text-center ">Check Payment</a>
@@ -47,23 +47,24 @@
                                         </svg>
                                     </div>
                                     <div class="flex flex-row gap-2 mt-2">
-                                        <div class="text-white font-extrabold bg-sky-400 py-0.5 px-3 rounded-2xl">12 August 2024 00:00 WIB</div>
-                                        <div class="text-white font-extrabold bg-red-400 py-0.5 px-3 rounded-2xl">28 August 2024 00:00 WIB</div>
+                                        <div class="text-white font-extrabold bg-sky-400 py-0.5 px-3 rounded-2xl">10 August 2024 00:00 WIB</div>
+                                        <div class="text-white font-extrabold bg-red-400 py-0.5 px-3 rounded-2xl">26 August 2024 00:00 WIB</div>
                                     </div>
                                 </button>
                             </h2>
                             <div id="accordion-color-body-2" class="hidden" aria-labelledby="accordion-color-heading-2">
                                 <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                                     <p class="mb-2 text-gray-500 dark:text-gray-400">Semua tim yang sudah bayar nama timnya akan tercatat di semua kategory : </p>
-                                    <p class="mb-2 text-gray-500 dark:text-gray-400">1. KTI </p>
-                                    <p class="mb-2 text-gray-500 dark:text-gray-400">2. Busplan</p>
-                                    <p class="mb-2 text-gray-500 dark:text-gray-400">3. PPL</p>
-                                    <p class="mb-5 text-gray-500 dark:text-gray-400">4. UX Designer</p>
+                                    {{-- <p class="mb-2 text-gray-500 dark:text-gray-400">1. KTI </p> --}}
+                                    <p class="mb-2 text-gray-500 dark:text-gray-400">1. Busplan</p>
+                                    <p class="mb-2 text-gray-500 dark:text-gray-400">2. PPL</p>
+                                    <p class="mb-5 text-gray-500 dark:text-gray-400">3. UX Designer</p>
                                     <!-- IF ELSE -->
                                     <div class="ml-5 bg-green-100 rounded rounded-4xl">
                                         <a href="{{route('checkpayment3.index')}}" class="block w-full p-3 text-center ">Check Payment</a>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

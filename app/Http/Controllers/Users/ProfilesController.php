@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Users;
+use Cloudinary\Cloudinary;
 
 use App\Models\Teams;
 use App\Models\Stages;
@@ -18,7 +19,6 @@ use App\Http\Requests\StoreProfileRequest;
 use App\Models\Payments;
 use App\Models\TeamSubmissions;
 use Illuminate\Support\Facades\Crypt;
-
 
 class ProfilesController extends Controller
 {
@@ -90,53 +90,124 @@ class ProfilesController extends Controller
     }
 
     public function store(StoreProfileRequest $request)
-    {
-        $total_members = $request->name_anggota_3 ? 3 : 2;
+{
+    // Tentukan total anggota maksimal 3, tapi opsional
+    $total_members = 3;
 
-        $category_stage_map = [
-            1 => 1,
-            2 => 4,
-            3 => 7,
-            4 => 10
-        ];
-        $stage_id = isset($category_stage_map[$request->category_id]) ? $category_stage_map[$request->category_id] : null;
+    $category_stage_map = [
+        1 => 1,
+        2 => 4,
+        3 => 7,
+        4 => 10,
+    ];
+    $stage_id = $category_stage_map[$request->category_id] ?? null;
 
-        DB::beginTransaction();
-        try {
-            $team = Teams::create([
-                'team_name' => $request->team_name,
-                'phone' => $request->phone,
-                'category_id' => $request->category_id,
-                'verified_status' => 'unverified', // 'pending', 'verified', 'rejected
-                'user_id' => Auth::id(),
-                'total_members' => $total_members,
-                'stage_id' => $stage_id,
-            ]);
+    DB::beginTransaction();
 
-            for ($i = 1; $i <= $total_members; $i++) {
-                $univ = $request->univ;
-                $name = $request['name_anggota_' . $i];
-                $active_path = $request->file('active_anggota_' . $i)->store($request->team_name . '/active');
-                Members::create([
-                    'team_id' => $team->id,
-                    'full_name' => $name,
-                    'universitas' => $request->univ,
-                    'active_certificate' => $active_path,
-                    'member_role' => $i == 1 ? 'ketua' : 'anggota',
-                ]);
+    try {
+        $team = Teams::create([
+            'team_name' => $request->team_name,
+            'phone' => $request->phone,
+            'category_id' => $request->category_id,
+            'verified_status' => 'unverified',
+            'user_id' => Auth::id(),
+            'total_members' => 0, // sementara 0, nanti update
+            'stage_id' => $stage_id,
+        ]);
+
+        $actual_members_count = 0;
+
+        for ($i = 1; $i <= $total_members; $i++) {
+            $name_key = 'name_anggota_' . $i;
+            $file_key = 'active_anggota_' . $i;
+            if (empty($request->$name_key)) {
+                continue;
             }
-            $team_submission = TeamSubmissions::create([
+
+            $active_path = null;
+
+            if ($request->hasFile($file_key) && $request->file($file_key)->isValid()) {
+                try {
+                    $cloudinary = new Cloudinary([
+                        'cloud' => [
+                            'cloud_name' => 'ds62ywc1c',
+                            'api_key'    => '824819866697979',
+                             'api_secret' => 'mtRkUZYo8jJJ4h3-A5jbhsTa39A',
+                        ],
+                        'url' => [
+                            'secure' => true,
+                        ],
+                    ]);
+                    $file = $request->file($file_key);
+                    $extension = strtolower($file->getClientOriginalExtension());
+
+                    $resource_type = in_array($extension, ['pdf', 'zip']) ? 'raw' : 'image';
+
+                    $originalName = $request->file($file_key)->getClientOriginalName();
+                    $extension = $request->file($file_key)->getClientOriginalExtension();
+                    $resource_type = in_array(strtolower($extension), ['pdf', 'zip']) ? 'raw' : 'image';
+
+                    $result = $cloudinary->uploadApi()->upload(
+                        $request->file($file_key)->getRealPath(),
+                        [
+                            'folder' => $request->team_name . '/active',
+                            'resource_type' => $resource_type,
+                            'public_id' => pathinfo($originalName, PATHINFO_FILENAME),
+                            'use_filename' => false,
+                            'unique_filename' => false,
+                        ]
+                    );
+
+                    $securePath =$result['secure_url'] ?? null;
+
+                    if (empty($securePath) || !is_string($securePath)) {
+                        throw new \Exception("Upload berhasil tapi URL kosong untuk anggota ke-$i.");
+                    }
+
+                    $active_path = $securePath;
+
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Gagal upload file anggota ke-' . $i . ': ' . $e->getMessage());
+                }
+            }
+            // Kalau file tidak ada atau tidak valid, tetap lanjut, active_path = null
+
+            Members::create([
                 'team_id' => $team->id,
-                'stage_id' => $stage_id,
+                'full_name' => $request->$name_key,
+                'universitas' => $request->univ,
+                'active_certificate' => $active_path,
+                'member_role' => $actual_members_count == 0 ? 'ketua' : 'anggota',
             ]);
-            DB::commit();
-            return redirect('dashboard')->with('success', 'Tim berhasil dibuat!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            dd($e->getMessage());
-            return redirect()->back()->with('error', 'Gagal membuat tim');
+
+            $actual_members_count++;
         }
+
+        if ($actual_members_count == 0) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Minimal satu anggota wajib diisi.');
+        }
+
+        // Update total_members di tim
+        $team->total_members = $actual_members_count;
+        $team->save();
+
+        TeamSubmissions::create([
+            'team_id' => $team->id,
+            'stage_id' => $stage_id,
+        ]);
+
+        DB::commit();
+
+        return redirect('dashboard')->with('success', 'Tim berhasil dibuat!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        dd($e->getMessage());
+        return redirect()->back()->with('error', 'Gagal membuat tim');
     }
+}
+
     public function downloadFile($path)
     {
         dd($path);

@@ -38,19 +38,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($payments as $index => $payment)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">
-                                    {{ $index + 1 }}
-                                </td>
-                                <td class="px-6 py-4 capitalize">
-                                    {{ $kti['team_name']  }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <a href="{{ route('download', ['filename' => urlencode($kti['path_2'])]) }}" class="font-medium text-[#40C6A1] hover:underline">{{ $kti['path_2']}}</a>
-                                </td>
-                            </tr>
-                            @endforeach --}}
+                    
                         </tbody>
                     </table>
                 </div>
